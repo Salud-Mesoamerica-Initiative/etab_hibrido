@@ -1,0 +1,17 @@
+web/bundles/
+web/uploads/origen_datos/*
+app/bootstrap.php.cache
+app/cache/*
+app/logs/*
+build/
+vendor
+composer.phar
+composer.lock
+!app/Resources/doc/manual-tecnico/Contents/composer.lock
+*~
+nbproject/
+.settings
+.buildpath
+.project
+
+app/config/parameters.yml
