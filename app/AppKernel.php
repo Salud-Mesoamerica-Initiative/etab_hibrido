@@ -21,9 +21,10 @@ class AppKernel extends Kernel
             //new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             //new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             
-            new Sonata\BlockBundle\SonataBlockBundle(),            
-            new Sonata\CacheBundle\SonataCacheBundle(),          
-            new Sonata\jQueryBundle\SonatajQueryBundle(),
+            new Sonata\BlockBundle\SonataBlockBundle(),
+			new Sonata\CoreBundle\SonataCoreBundle(),             
+            new Sonata\CacheBundle\SonataCacheBundle(), 
+			new Sonata\jQueryBundle\SonatajQueryBundle(),                   
             new Sonata\AdminBundle\SonataAdminBundle(),                        
             new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
             new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
@@ -38,11 +39,15 @@ class AppKernel extends Kernel
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             
-            //new FR3D\LdapBundle\FR3DLdapBundle(),
+            new FR3D\LdapBundle\FR3DLdapBundle(),
             
             new SunCat\MobileDetectBundle\MobileDetectBundle(),
             
             new MINSAL\IndicadoresBundle\IndicadoresBundle(),
+			
+			new FOS\RestBundle\FOSRestBundle(),
+			
+			new JMS\SerializerBundle\JMSSerializerBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -5,6 +5,16 @@ $(document).ready(function() {
     //Si se despliega algún menú dentro del gráfico se modifica un atributo
     //ccs para que se muestre correctamente se regresa a su modo normal cuando el menú se cierra
     //para esto fue necesario reescribir unos métodos de jQuery
+    //Variables de configuración de datables
+    sSwfPath = $('#directorio').val() + "/bundles/indicadores/js/DataTables/media/swf/copy_csv_xls_pdf.swf";   
+    oLanguage = {
+        "sLengthMenu": "Display _MENU_ records per page",
+        "sZeroRecords": trans.nada_encontrado,
+        "sInfo": trans.mostrando_n_de_n,
+        "sInfoEmpty": trans.mostrando_0,
+        "sInfoFiltered": trans.filtrados_dequ
+    }; 
+    
 	var cookies = document.cookie.split(";");
 	for(var i=0; i < cookies.length; i++) {
 		var equals = cookies[i].indexOf("=");
@@ -57,6 +67,7 @@ $(document).ready(function() {
 			$('#header_sala').html('');
 			$("#_cerrar_sala_").attr("style","display:none");
 			$("#_guardar_sala_").attr("style","display:none");
+			$("#_sala_acciones_").attr("style","display:none");
 			$("#titulo_header").attr("style","display:none");
 			
 			$("#myModalMenu li button").removeClass("active");
@@ -93,6 +104,7 @@ $(document).ready(function() {
 			$('#header_sala').html('');
 			$("#_cerrar_sala_").attr("style","display:none");
 			$("#_guardar_sala_").attr("style","display:none");
+			$("#_sala_acciones_").attr("style","display:none");
 			$("#titulo_header").attr("style","display:none");
 			
 			graficos=Array();
@@ -102,7 +114,9 @@ $(document).ready(function() {
 			$("#sala").html('');
 			$("#_cerrar_sala_").attr("style","display:");
 			$("#_guardar_sala_").attr("style","display:");
+			$("#_sala_acciones_").attr("style","display:");
 			$("#titulo_header").attr("style","display:");
+			$("#titulo_header").attr("sala-id",sala);
 			$('.salas-id').removeClass("btn-success");
 			$('.salas-id').removeClass("active");
 			$('.salas-id').html('<i class="glyphicon glyphicon-plus"></i>');
@@ -118,7 +132,8 @@ $(document).ready(function() {
 			$('#nombre_sala').attr('id-sala', sala);
 			$('#nombre_sala').val(titulo);
 			$('#header_sala').html('<span class="glyphicon glyphicon-th"></span> ' + titulo );
-	
+			
+			cargarAcciones(sala);
 			var graficos = JSON.parse($(this).attr('data'));
 			for (i = 0; i < graficos.length; i++) 
 			{
@@ -244,7 +259,61 @@ $(document).ready(function() {
             }
 
         });
-    });       
+    }); 
+
+    // cometario sala
+    
+    if ($('#sala_default').val() == 0) {
+        // Le indicamos cargar los mensajes cada minuto
+        setInterval(function() {
+            if ($('.marco-sala').attr('id-sala')) {
+                $(document).unbind(".mine");
+                $.post(Routing.generate('sala_get_comentarios', {idSala: $('.marco-sala').attr('id-sala')}), {vez: 2}, function(data) {
+                    if (data != '') {
+                        $('#chat-mensajes').append(data);   // Añadir el nuevo mensaje al final
+                        setScroll();
+                    }
+                    ajax_states();
+                });
+            }
+        }, 60000);
+    }
+    $('#addAction').on('hidden.bs.modal', function (e) {
+        $('#info_accion').hide();
+        $('#acciones_div').removeClass('has-error');
+    });
+    
+    $('#guardar_accion').click(function() {
+        var datos = new Object();
+
+        datos.idSala = $('#nombre_sala').attr('id-sala');
+        datos.acciones = $('#acciones').val();
+        if (datos.acciones == ''){
+            $('#info_accion').html(trans._error_acciones_vacia_);
+            $('#acciones_div').addClass('has-error');
+            $('#info_accion').show();
+            return;
+        }
+        datos.observaciones = $('#observaciones').val();
+        datos.responsables = $('#responsables').val();
+
+        $.post(Routing.generate('accion_guardar', {id:datos.idSala}), {datos: JSON.stringify(datos),
+            _sonata_admin: 'sonata.admin.sala_acciones'},
+        function(resp) {
+            if (resp.estado === 'ok') {                
+                $('#addAction').modal('toggle');
+                cargarAcciones($("#titulo_header").attr("sala-id"));
+                
+                //limpiar los controles
+                $('#acciones').val('');                
+                $('#observaciones').val('');
+                $('#responsables').val('');
+            }
+            else {
+                $('#info_accion').html('_error_guardar_sala_').addClass('error');
+            }
+        }, 'json');
+    });      
 });
 function marcar_agregados()
 {
@@ -355,6 +424,7 @@ function cargar_indicador(mid)
 	else
 	{
 		$("#_guardar_sala_").attr("style","display:");
+		$("#_sala_acciones_").attr("style","display:");
 		sala_agregar_fila(); 
 		
 		$("#"+mid).addClass("active btn-success");
@@ -366,4 +436,72 @@ function cargar_indicador(mid)
 		
 		dibujarIndicador($("#"+mid).attr('data-id'));
 	}
+}
+
+//cometario sala
+function mostrarAccionSala(mostrar)
+{
+	$('#guardar_accion').attr('style','display:'+mostrar);
+}
+function cargarMensajes(sala) {
+	if (sala) {
+	    $('#chat-mensajes').load(
+	            Routing.generate('sala_get_comentarios', {idSala: sala}), {vez: 1},
+	    function(response, status, xhr) {
+	        setScroll();
+	    });
+	}
+}
+
+function cargarAcciones(sala) {
+	if (sala) {
+		var url = Routing.generate('sala_acciones_custom_list', {id: sala,
+    	_sonata_admin: 'sonata.admin.sala_acciones'});
+		
+
+		$('#acciones_sala').load(url,
+        function(response, status, xhr) {
+            $('#acciones_sala table').dataTable({
+                "bJQueryUI": true,
+                "sDom": '<"H"Tfr>t<"F"ip>',
+                "oTableTools": {
+                    "sSwfPath": sSwfPath,
+                    "aButtons": [
+                        {
+                            "sExtends": "collection",
+                            "sButtonText": trans.exportar,
+                            "aButtons": [{
+                                "sExtends": "csv",
+                                "sTitle": sala[1]
+                            }, {
+                                "sExtends": "xls",
+                                "sTitle": sala[1]
+                            }, {
+                                "sExtends": "pdf",
+                                "sTitle": sala[1]
+                            }]
+                        }
+                    ]
+                },
+            "oLanguage": oLanguage
+            });
+        });
+	}
+}
+
+function cargarUsuarios(sala) {
+if (sala) {
+	$('#usuarios_sala').load(
+        Routing.generate('sala_get_usuarios', {idSala: sala}),
+        function(response, status, xhr) {                        
+            $('#usuarios_sala_').select2();
+            $('#usuarios_sala_').on("change", function (e) { 
+                var accion = (e.added !== undefined) ? 'agregar' : 'borrar';
+                var id_usuario = (e.added !== undefined) ? e.added.id : e.removed.id;
+                $.get(Routing.generate('sala_set_usuario',
+                    {id: $('.marco-sala').attr('id-sala'), id_usuario: id_usuario, accion: accion}
+                ));
+            });
+        });        
+    }
 }

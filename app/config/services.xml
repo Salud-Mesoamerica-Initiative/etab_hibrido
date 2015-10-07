@@ -182,13 +182,14 @@
             <tag name="sonata.admin"
                  manager_type="orm" 
                  group="indicadores" 
-                 label="ficha_tecnica-eTAB"
+                 label="ficha_tecnica"
             />
             <argument />
             <argument>MINSAL\IndicadoresBundle\Entity\FichaTecnica</argument>
             <argument>IndicadoresBundle:FichaTecnicaAdmin</argument>
             <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
         </service>
+		
         <service id="sonata.admin.indicador_alertas" class="MINSAL\IndicadoresBundle\Admin\IndicadorAlertasAdmin">
             <tag name="sonata.admin"
                  manager_type="orm" 
@@ -221,6 +222,17 @@
             <argument />
             <argument>MINSAL\IndicadoresBundle\Entity\Boletin</argument>
             <argument>IndicadoresBundle:Correo</argument>
+            <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
+        </service>
+		<service id="sonata.admin.sala_acciones" class="MINSAL\IndicadoresBundle\Admin\SalaAccionesAdmin">
+            <tag name="sonata.admin"
+                 manager_type="orm" 
+                 group="indicadores" 
+                 label="_sala_acciones_"
+            />
+            <argument />
+            <argument>MINSAL\IndicadoresBundle\Entity\SalaAcciones</argument>
+            <argument>IndicadoresBundle:SalaAccionesAdmin</argument>
             <call method="setMaxPerPage"><argument>%admin_max_per_page_number%</argument></call>
         </service>
 		

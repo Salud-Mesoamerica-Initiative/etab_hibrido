@@ -77,7 +77,7 @@ $(document).ready(function(){
 <div class="container-fluid" id="contenedor_tablero">
     <div class="row" id="titulo_header" style="display:none">
     	<div class="col-md-12">
-	    <div class="page-header" ><h1 id="header_sala"></h1></div> 
+	    <div class="page-header" style="padding:1px"><h1 id="header_sala"></h1></div> 
         </div>
     </div>
 
@@ -216,7 +216,7 @@ $(document).ready(function(){
                             {% for indicador in indicadores_no_clasificados %}
                             
                                 <li class='list-group-item'
-                                     style="height:100%; width:100%; display:block;">
+                                     style="height:100%; min-height:55px; width:100%; display:block;">
                                     <button type="button" class="indicador pull-left btn" style="margin-right:15px" data-id='{{indicador.id}}'
                                     data-unidad-medida='{{indicador.unidadMedida}}' id='{{indicador.id}}'>
                                     <i class="glyphicon glyphicon-plus"></i>
@@ -241,7 +241,7 @@ $(document).ready(function(){
                             {% for indicador in app.user.favoritos %}
                             	
                             	<li class='list-group-item'
-                                     style="height:100%; width:100%; display:block;">
+                                     style="height:100%; min-height:55px; width:100%; display:block;">
                                     <button type="button" class="indicador pull-left btn" style="margin-right:15px" data-id='{{indicador.id}}'
                                     data-unidad-medida='{{indicador.unidadMedida}}' id='fav-{{indicador.id}}'>
                                     <i class="glyphicon glyphicon-plus"></i>
@@ -263,7 +263,7 @@ $(document).ready(function(){
 </div><!-- /.modal -->
 
 
-
+{% include 'IndicadoresBundle:FichaTecnicaAdmin:accion_sala.html.twig' %}
 
 <!-- Modal Salas-->  
 <div id="myModalSalas" class="modal fade" style="z-index:99999999">
@@ -574,7 +574,7 @@ function indicadoresList(valor,che,ft)
 			var li="";
 			for(var c=0;c<datos.length; c++)
 			{
-				li=li+'<li class="list-group-item" style="height:100%; width:100%; display:block;">'+
+				li=li+'<li class="list-group-item" style="height:100%; min-height:55px; width:100%; display:block;">'+
 				'<button type="button" class="indicador pull-left btn" style="margin-right:15px" data-id="'+datos[c].id+'"'+
 				'onclick="cargar_indicador('+datos[c].id+');" id="'+datos[c].id+'">'+
 				'<i class="glyphicon glyphicon-plus"></i>'+

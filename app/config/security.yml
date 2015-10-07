@@ -7,7 +7,7 @@ security:
     #    connection: default
         
     role_hierarchy:
-        ROLE_ADMIN:       [ROLE_USER, ROLE_SONATA_ADMIN, ROLE_USER_TABLERO, ROLE_USER_CUBOS, USUARIO_ETAB, USUARIO_TES]
+        ROLE_ADMIN:       [ROLE_USER, ROLE_SONATA_ADMIN, ROLE_USER_TABLERO, ROLE_USER_PIVOT_TABLE, ROLE_USER_CUBOS, USUARIO_ETAB, USUARIO_TES]
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]        
         SONATA:
             #- ROLE_SONATA_PAGE_ADMIN_PAGE_EDIT  # if you are using acl then this line must be commented
@@ -39,7 +39,7 @@ security:
                 login_path:     /admin/login
                 use_forward:    false
                 check_path:     /admin/login_check
-                default_target_path: /admin/dashboard
+                default_target_path: /admin/minsal/indicadores/fichatecnica/tablero
                 use_referer:    true   
             logout:
                 path:           /admin/logout
@@ -59,7 +59,7 @@ security:
                 use_forward:    false
                 check_path:     /admin/login_check
                 failure_path:   null
-                default_target_path: /admin/dashboard
+                default_target_path: /admin/minsal/indicadores/fichatecnica/tablero
                 use_referer:    true
             logout:             true
             anonymous:          true
