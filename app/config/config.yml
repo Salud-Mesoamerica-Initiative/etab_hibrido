@@ -245,3 +245,13 @@ swiftmailer:
     #disable_delivery:  true
     #schiapassm2015@gmail.com
     #bit@2013 (B mayuscula o minuscula)
+
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+        options:    []
+    image:
+        enabled:    true
+        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+        options:    []
