@@ -162,9 +162,12 @@ class IndicadorController extends Controller
         $fichaRepository = $em->getRepository('IndicadoresBundle:FichaTecnica');
 		
 		$user = $this->container->get('security.context')->getToken()->getUser();
-		
+        $us = "";
+		if(is_object($user))
+            $us = $user->getId();
         $fichaRepository->crearIndicador($fichaTec, $dimension, $filtros);
-        $resp['datos'] = $fichaRepository->calcularIndicador($fichaTec, $dimension, $filtros, $verSql, $fechas, $user->getId());
+
+        $resp['datos'] = $fichaRepository->calcularIndicador($fichaTec, $dimension, $filtros, $verSql, $fechas, $us);
         $response = new Response(json_encode($resp));
         if ($this->get('kernel')->getEnvironment() != 'dev')
             $response->setMaxAge($this->container->getParameter('indicador_cache_consulta'));
@@ -740,7 +743,9 @@ return $result;
 			else
 			{
 				settype($sala,"integer");
-				$sa = $em->getRepository('IndicadoresBundle:Boletin')->getRuta($sala,$token);				
+				$sa = $em->getRepository('IndicadoresBundle:Boletin')->getRuta($sala,$token);
+                if(!$sa && $sala != "" && $token != "")				
+                    $sa = $em->getRepository('IndicadoresBundle:Social')->getRuta($sala,$token);
 				if ($sa)
 				{
 					if ($sa != "Error")
@@ -769,6 +774,8 @@ return $result;
 			{
                 settype($sala,"integer");
 				$sa = $em->getRepository('IndicadoresBundle:Boletin')->getRuta($sala,$token);
+                if(!$sa && $sala != "" && $token != "")             
+                    $sa = $em->getRepository('IndicadoresBundle:Social')->getRuta($sala,$token);
 				if ($sa)
 				{
 					if ($sa != "Error")
@@ -802,6 +809,8 @@ return $result;
     {
     	$em = $this->getDoctrine()->getManager();
     	$sa = $em->getRepository('IndicadoresBundle:Boletin')->getRuta($sala,$token);
+        if(!$sa && $sala != "" && $token != "")             
+            $sa = $em->getRepository('IndicadoresBundle:Social')->getRuta($sala,$token);
 		if (!$sa)
 			if ($sa == "Error")
 				return false;
@@ -815,7 +824,8 @@ return $result;
     { 
     	$em = $this->getDoctrine()->getManager();
     	$sa = $em->getRepository('IndicadoresBundle:Boletin')->getGroup();
-		
+		if(!$sa && $sala != "" && $token != "")               
+            $sa = $em->getRepository('IndicadoresBundle:Social')->getRuta($sala,$token);
 		return $this->render('IndicadoresBundle:Page:group.html.twig', array(
 				'group' => $sa,
 				'token' => $token,

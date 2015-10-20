@@ -377,6 +377,16 @@ _observaciones_: Observaciones
 _responsables_: Responsables
 _agregar_accion_: 'Agregar acción'
 _historial_accion_: 'Historial de acciónes'
+_compartir_sala_: 'Compartir sala'
+_usuario_con: 'Usuarios con cuenta'
+_usuario_notificacion: 'Enviar notificacion por correo a los usuarios con cuenta'
+_usuario_sin: 'Usuarios sin cuenta'
+_usuario_sin_inidicacion: 'Escribir el correo del usuario. Puede escribir mas de 1 separando por comas'
+_comentarios_: Comentarios
+_enviar_: Enviar
+_fecha_: Fecha
+_foro_: Foro de discusión
+_photo_: Foto de perfil
 
 Boletin: Boletin
 'Boletin List': 'Lista de Boletines'

@@ -20,6 +20,13 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @var string $photo
+     *
+     * @ORM\Column(name="photo", type="text", nullable=true)
+     */
+    private $photo;
    
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -87,6 +94,31 @@ class User extends BaseUser
         $this->id = $id;
     }
     
+   
+
+    /**
+     * Set photo
+     *
+     * @param string $photo
+     * @return photo
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+    
+        return $this;
+    }
+
+    /**
+     * Get photo
+     *
+     * @return string 
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */

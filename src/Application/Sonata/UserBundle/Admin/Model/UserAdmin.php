@@ -69,6 +69,7 @@ class UserAdmin extends BaseAdmin
                     ->add('lastname', null, array('required' => false))
                     ->add('website', 'url', array('required' => false))
                     ->add('biography', 'text', array('required' => false))
+                    ->add('photo', 'text', array('required' => false))
                     ->add('gender', 'choice', array(
                         'choices' => array(
                             UserInterface::GENDER_UNKNOWN => $this->getTranslator()->trans('gender_unknown'),

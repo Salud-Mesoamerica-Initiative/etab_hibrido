@@ -230,6 +230,10 @@
                 <source>form.label_biography</source>
                 <target>Biografía</target>
             </trans-unit>
+            <trans-unit id="form.label_photo">
+                <source>form.label_photo</source>
+                <target>Foto de perfil</target>
+            </trans-unit>
             <trans-unit id="form.label_gender">
                 <source>form.label_gender</source>
                 <target>Sexo</target>

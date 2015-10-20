@@ -262,7 +262,7 @@ $(document).ready(function(){
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-
+{% include 'IndicadoresBundle:FichaTecnicaAdmin:compartir_sala.html.twig' %}
 {% include 'IndicadoresBundle:FichaTecnicaAdmin:accion_sala.html.twig' %}
 
 <!-- Modal Salas-->  
@@ -540,6 +540,15 @@ $(document).ready(function(){
 		$('#misalax3').css({'max-height':($(window).height()/2.5)+'px'});
 		$('#misalax3').css({'min-height':'70px'});
 		$('#misalax3').css({'overflow':'auto'});
+
+        $('#acciones_sala').css({'max-height':($(window).height()/2.5)+'px'});
+        $('#acciones_sala').css({'min-height':'70px'});
+        $('#acciones_sala').css({'overflow':'auto'});
+
+        $('#content_mensajes').css({'max-height':($(window).height()/2.5)+'px'});
+        $('#content_mensajes').css({'min-height':'70px'});
+        $('#content_mensajes').css({'overflow':'auto'});
+        
 	}
 	window.onresize=maximizar;
 	window.onload=maximizar;

@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Symfony\Component\HttpFoundation\Response;
 use MINSAL\IndicadoresBundle\Entity\ComentariosSala;
+use MINSAL\IndicadoresBundle\Entity\Social;
 use MINSAL\IndicadoresBundle\Entity\GrupoIndicadores;
 use MINSAL\IndicadoresBundle\Entity\User;
 use MINSAL\IndicadoresBundle\Entity\UsuarioGrupoIndicadores;
@@ -23,28 +24,50 @@ class SocialController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $req = $this->getRequest();
 
-        
+                                    
         if ($req->get('vez') == 1 or $session->get('ultima_lectura_comentarios_sala') == ''){
-            
-            $comentarios = $em->getRepository('IndicadoresBundle:ComentariosSala')
-                ->findBy(array('sala'=>$idSala), array('fecha'=>'ASC'))
-                 ;            
+            $comentarios = $em->createQuery('SELECT c, u FROM IndicadoresBundle:ComentariosSala c 
+                LEFT JOIN c.usuario u 
+                WHERE c.sala = :sala AND c.fecha > :fecha ORDER  BY c.fecha ASC')
+            ->setParameter('sala', $idSala)->setParameter('fecha', '1970-01-01')->getResult();                        
         }
-        else{
-            $comentarios = $em->createQuery('SELECT c FROM IndicadoresBundle:ComentariosSala  c WHERE c.sala = :sala AND c.fecha > :fecha ORDER  BY c.fecha ASC')
-                            ->setParameter('sala', $idSala)
-                            ->setParameter('fecha', $session->get('ultima_lectura_comentarios_sala'))
-                            ->getResult();
+        else{            
+            $comentarios = $em->createQuery('SELECT c, u FROM IndicadoresBundle:ComentariosSala c 
+                LEFT JOIN c.usuario u  
+                WHERE c.sala = :sala AND c.fecha > :fecha ORDER  BY c.fecha ASC')
+            ->setParameter('sala', $idSala)->setParameter('fecha', $session->get('ultima_lectura_comentarios_sala'))->getResult();                        
         }
+
+        
         $session->set('ultima_lectura_comentarios_sala', new \DateTime("now"));
         
         $ret = '';
         foreach($comentarios as $comentario){
-            $ret .= '<div class="mensaje-sala">
-                <span class="chat-usuario">'.$comentario->getUsuario().'</span> <span class="pull-right chat-fecha"> '.$comentario->getFecha()->format('Y-m-d H:i:s').'</span><BR/> 
-                    '.$comentario->getComentario().' </div>';
+            $u = $comentario->getUsuario();
+            $photo  = $u->getPhoto() != "" ? $u->getPhoto() : $this->container->get('templating.helper.assets')->getUrl('bundles/indicadores/images/user.png');
+            $name = $u->getFirstname().$u->getLastname() == "" ? $u->getUsername() : $u->getFirstname().' '.$u->getLastname();
+            $ret .= '<li>
+                        <div class="comment-main-level"> 
+                            <!-- Avatar -->
+                            <div class="comment-avatar"><img src="'.$photo.'"></div>                                               
+                            <!-- Contenedor del Comentario -->
+                            <div class="comment-box">
+                                <div class="comment-head">
+                                    <h6 class="comment-name"><a href="#">'.$name.'</a></h6>
+                                    
+                                    <i class="fa fa-calendar"><span>'.$comentario->getFecha()->format('d-M-Y H:i:s').'</span></i>
+                                    
+                                </div>
+                                <div class="comment-content">
+                                    '.$comentario->getComentario().'
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </li>';
         }
-        
+
+                
 
         
         $response = new Response($ret);
@@ -61,20 +84,127 @@ class SocialController extends Controller {
         $req = $this->getRequest();
         $comentario = new ComentariosSala();
         $ahora = new \DateTime("now");
-        
-        $comentario->setComentario($req->get('chat-mensaje'));
-        $comentario->setUsuario($this->getUser());
-        $comentario->setFecha($ahora);
-        $comentario->setSala($sala);
-        
-        $em->persist($comentario);
-        $em->flush();
-        $session->set('ultima_lectura_comentarios_sala', new \DateTime("now"));
-        
-        $ret = '<div class="mensaje-sala">
-                <span class="chat-usuario">'.$comentario->getUsuario().'</span> <span class="pull-right chat-fecha"> '.$comentario->getFecha()->format('Y-m-d H:i:s').'</span><BR/> 
-                    '.$comentario->getComentario().' </div>';
-        $response = new Response($ret);
+        $ret = ""; $msg = "";
+        if($req->get('chat-mensaje')!="")
+        {
+            $comentario->setComentario($req->get('chat-mensaje'));
+            $comentario->setUsuario($this->getUser());
+            $comentario->setFecha($ahora);
+            $comentario->setSala($sala);
+            
+            $em->persist($comentario);
+            $em->flush();
+
+            $session->set('ultima_lectura_comentarios_sala', new \DateTime("now"));
+            
+            $ret = '<li>
+                        <div class="comment-main-level"> 
+                            <!-- Avatar -->
+                            <div class="comment-avatar"></div>                                               
+                            <!-- Contenedor del Comentario -->
+                            <div class="comment-box">
+                                <div class="comment-head">
+                                    <h6 class="comment-name"><a href="#">'.$comentario->getUsuario().'</a></h6>
+                                    
+                                    <i class="fa fa-calendar"><span>'.$comentario->getFecha()->format('d-M-Y H:i:s').'</span></i>
+                                    
+                                </div>
+                                <div class="comment-content">
+                                    '.$comentario->getComentario().'
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </li>';
+        }
+        if($req->get("correo") == "1")
+        {
+            $dato = array(array
+            (
+                'token' =>md5(time()), 
+                'sala' => $sala
+            ));
+
+            $qb = $em->createQueryBuilder();
+            $qb->select('u');
+            $qb->from('IndicadoresBundle:User', 'u');
+            $qb->where($qb->expr()->in('u.id', $req->get('usuario_sala')));
+            $users = $qb->getQuery()->getResult();
+
+            foreach($users as $usuario)
+            {       
+                if($usuario->isEnabled())
+                { 
+                    $name = $usuario->getFirstname().$usuario->getLastname() == "" ? $usuario->getUsername() : $usuario->getFirstname().' '.$usuario->getLastname();                      
+                    $array = array(array
+                    (
+                        'username' => $usuario->getUsername(), 
+                        'email' => $usuario->getEmail(), 
+                        'nombre' => $usuario->getFirstname(), 
+                        'apellido' => $usuario->getLastname()
+                    )); 
+                    $documento1 = $this->container->getParameter('kernel.root_dir').'/../web/bundles/indicadores/images/logo_salud.png';
+                    $message = \Swift_Message::newInstance()
+                        ->attach(\Swift_Attachment::fromPath($documento1))
+                        ->attach(\Swift_Attachment::fromPath($documento2))
+                        ->setSubject('Sala eTAB')
+                        ->setFrom('eTAB@SM2015.com.mx')
+                        ->setTo($usuario->getEmail()) 
+                        ->setBody($this->renderView('IndicadoresBundle:Page:sala.html.twig', array('dato' => $dato,'array' => $array)),"text/html");
+                    $this->get('mailer')->send($message);
+                    $msg.="se envio correo a: ".$name." (".$usuario->getEmail().")\n\n";
+                }
+            }            
+        }
+
+        if($req->get("usuarios_sin")!="")
+        {
+            $token  = md5(time());
+            $dato = array(array
+            (
+                'token' =>$token, 
+                'sala' => $sala
+            ));
+            
+            $usuario = explode(",", $req->get("usuarios_sin"));
+
+            for($i=0; $i<count($usuario);$i++)
+            {       
+                if(stripos($usuario[$i],"@"))
+                { 
+                    $array = array(array
+                    (
+                        'username' => "Temporal", 
+                        'email' => $usuario[$i], 
+                        'nombre' => "", 
+                        'apellido' => ""
+                    )); 
+                    $documento1 = $this->container->getParameter('kernel.root_dir').'/../web/bundles/indicadores/images/logo_salud.png';
+                    $message = \Swift_Message::newInstance()
+                        ->attach(\Swift_Attachment::fromPath($documento1))
+                        ->setSubject('Sala eTAB')
+                        ->setFrom('eTAB@SM2015.com.mx')
+                        ->setTo(trim($usuario[$i])) 
+                        ->setBody($this->renderView('IndicadoresBundle:Page:sala.html.twig', array('dato' => $dato,'array' => $array)),"text/html");
+                    $this->get('mailer')->send($message);
+                    $msg.="se envio correo a: ".$usuario[$i]."\n\n";
+                }
+            }
+            if($msg!="")
+            {
+                $social = new Social();
+                $ahora = new \DateTime("now");
+                
+                $social->setToken($token);
+                $social->setCreado($ahora);
+                $social->setSala($sala);
+                
+                $em->persist($social);
+                $em->flush();
+            }    
+        }
+
+        $response = new Response(json_encode(array("mensaje" => $ret,"correo" => $msg)));
 
         return $response;
     }
@@ -103,13 +233,13 @@ class SocialController extends Controller {
         $usuarios = $em->getRepository('IndicadoresBundle:User')
                         ->findBy(array(), array('username'=>'ASC'));
         
-        $ret = '<SELECT id="usuarios_sala_" multiple="" style="width:100%">';
+        $ret = '<SELECT id="usuarios_sala_" multiple="" class="form-control">';
         foreach ($usuarios as $u){
             if ($u->getId() != $this->getUser()->getId()){
+                $name = $u->getFirstname().$u->getLastname() == "" ? $u->getUsername() : $u->getFirstname().' '.$u->getLastname();
                 $selected = (in_array($u->getId(), $usuarios_sala)) ? 'selected="selected"': '';
                 $disable = ($selected=='selected="selected"' and !in_array($u->getId(), $usuarios_sala_por_usuario_actual)) ? 'disabled="disabled"': '';
-                //$ret .= '<INPUT class="usuariosSala" TYPE="checkbox" VALUE="'.$u->getId().'" NAME="usuariosSala[]" '.$check.' '.$disable.'/>'.$u->getUsername().'<BR>';
-                $ret .= '<OPTION VALUE="'.$u->getId().'" '.$selected.' '.$disable.'>'.$u->getFirstname().' '.$u->getLastname().'</OPTION>';
+                $ret .= '<OPTION VALUE="'.$u->getId().'" '.$selected.' '.$disable.'>'.$name.'</OPTION>';
             }
         }
         $ret .= '</SELECT>';
@@ -142,4 +272,32 @@ class SocialController extends Controller {
         return new Response();
     }
 
+    /**
+    * @Route("/publico/sala/{sala}/{token}", name="sala_publico", options={"expose"=true})
+    */
+    public function tokenAction($sala,$token)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sa = $em->getRepository('IndicadoresBundle:Social')->getRuta($sala,$token);
+
+        if (!$sa) 
+            return $this->render('IndicadoresBundle:Page:error.html.twig', array(
+                'error' => "No existe la sala: $sala",
+                'bien' => "")); 
+        else if($sa=="Error")   
+            return $this->render('IndicadoresBundle:Page:error.html.twig', array(
+                'error' => "El tiempo de este boletin ha expirado",
+                'bien' => ""));
+        else
+        {   
+            $sa['indicadores'] = $em->getRepository('IndicadoresBundle:GrupoIndicadores')
+                    ->getIndicadoresSala($em->getRepository('IndicadoresBundle:GrupoIndicadores')->find($sa[0]['sala']));
+            $indicadores = $em->getRepository("IndicadoresBundle:FichaTecnica")->getIndicadoresPublicos();        
+            return $this->render('IndicadoresBundle:FichaTecnicaAdmin:tablero_public.html.twig', array(
+                    'indicadores' => $indicadores,
+                    'sala' => $sa
+                ));
+        }
+        
+    }
 }
