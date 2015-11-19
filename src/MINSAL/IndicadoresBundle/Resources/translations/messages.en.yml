@@ -409,3 +409,7 @@ manual_tecnico: 'Technical Manual'
 manual_operativo: 'Operating Manual' 
 manual_usuario: 'User Manual' 
 manual_tablero: 'Dashboard Manual'
+
+_exportar_datos_: 'Export Data'
+_exportar_datos_opciones_: 'Choose the format to export'
+_exportar_datos_boton_: 'Export'

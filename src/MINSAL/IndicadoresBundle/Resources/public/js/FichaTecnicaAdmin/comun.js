@@ -863,8 +863,12 @@ function limpiarZona2(id)
 		indicador[contador]='<div class="col-md-4">'+$(this).html()+'</div>';
 		contador++;
 	});
-	if(contador==0)
+	if(contador==0){
+                $("#_exportar_datos_").attr("style","display:none");
+                $("#_exportar_diccionario_datos_").attr("style","display:none");
+                $("#_sala_acciones_").attr("style","display:none");
 		$("#_guardar_sala_").attr("style","display:none");
+            }
 	
 	$("#sala").html('');
 	for(var i=0;i<contador;i++)
@@ -1202,7 +1206,7 @@ function acciones_button()
             "bJQueryUI": true,
             "sDom": '<"H"Tfr>t<"F"ip>',
             "oTableTools": {
-                "sSwfPath": "/bundles/indicadores/js/DataTables/media/swf/copy_csv_xls_pdf.swf",
+                "sSwfPath": rutahome,
                 "aButtons": [
                     {
                         "sExtends": "collection",
@@ -1282,7 +1286,7 @@ function acciones_button()
                 "bInfo": false,
                 "iDisplayLength": 30,
                 "oTableTools": {
-                    "sSwfPath": "/bundles/indicadores/js/DataTables/media/swf/copy_csv_xls_pdf.swf",
+                    "sSwfPath": rutahome,
                     "aButtons": [
                         {
                             "sExtends": "collection",
