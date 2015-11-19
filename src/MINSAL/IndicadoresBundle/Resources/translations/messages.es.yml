@@ -408,3 +408,7 @@ manual_tecnico: 'Manual Técnico'
 manual_operativo: 'Manual Operativo'
 manual_usuario: 'Manual Usuario'
 manual_tablero: 'Manual Tablero'
+
+_exportar_datos_: 'Exportar Datos'
+_exportar_datos_opciones_: 'Elige el formato para exportar'
+_exportar_datos_boton_: 'Exportar'
