@@ -62,16 +62,8 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
-        auto_mapping: true       
-
-# Swiftmailer Configuration
-swiftmailer:
-    transport: %mailer_transport%
-    host:      %mailer_host%
-    username:  %mailer_user%
-    password:  %mailer_password%
-    spool:     { type: memory }
-
+        auto_mapping: true
+        
 sonata_block:
     default_contexts: [cms]
     blocks:
@@ -235,10 +227,12 @@ mobile_detect:
     switch_device_view: ~
 
 swiftmailer:
-    transport:  gmail
-    #encryption: ssl
+    #transport:  gmail
+    #transport: smtp
+    encryption: ssl
     #auth_mode:  login
-    #host:      smtp.gmail.com
+    host: smtp.gmail.com
+    port: 465
     username:  boletin.dev.test@gmail.com
     password:  Boletin@test
     #spool:     { type: memory }
