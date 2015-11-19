@@ -423,6 +423,9 @@ function sala_agregar_fila()
 	$('DIV.area_grafico').on('click',function(e) {
 		zona_elegir(this);
 	});
+	$("#titulo_header").attr("style","display:none");
+	$('#header_sala').html('');
+	$('#header_sala').html('<span class="glyphicon glyphicon-flag"></span> ' );
 }
 
 function sala_quitar_fila() 
