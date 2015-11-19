@@ -30,9 +30,9 @@
 }
 
 #contenedor_tablero
-	{
-		margin-top:112px;
-	}
+{
+	padding-top:60px;
+}
 
 @media screen and (max-width:1200px)
 {
