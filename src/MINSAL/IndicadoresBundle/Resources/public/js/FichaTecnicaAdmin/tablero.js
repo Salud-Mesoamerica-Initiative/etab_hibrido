@@ -57,7 +57,7 @@ $(document).ready(function() {
 		marcar_agregados();
     }); 
     $('.indicador').on('click',function(e) {
-		mid=$(this).attr("data-id");
+		mid=$(this).attr("id");
 		cargar_indicador(mid);
     });
 	$("#_cerrar_sala_").on('click',function(e) {
@@ -411,7 +411,7 @@ function sala_agregar_fila()
 							'<div class="grafico" ></div>' +
 						'</div>' +  
 					'</div>'+
-					'<div class="panel-footer"></div>'+
+					'<div class="panel-footer"></div>'+					
 				'</div></div>';         
 	var contador_indicadores = 0;
 	$('#sala .row').last().find('.col-md-4').each(function(){
@@ -429,9 +429,6 @@ function sala_agregar_fila()
 	$('DIV.area_grafico').on('click',function(e) {
 		zona_elegir(this);
 	});
-	$("#titulo_header").attr("style","display:none");
-	$('#header_sala').html('');
-	$('#header_sala').html('<span class="glyphicon glyphicon-flag"></span> ' );
 }
 
 function sala_quitar_fila() 
