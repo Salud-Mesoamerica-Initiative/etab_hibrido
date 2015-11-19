@@ -388,6 +388,16 @@ _observaciones_: Observations
 _responsables_: Responsibles
 _agregar_accion_: Add action
 _historial_accion_: History actions
+_compartir_sala_: 'Share room'
+_usuario_con : ' Users with account '
+_usuario_notificacion : 'Send notification mail to users with account '
+_usuario_sin : 'Users no account '
+_usuario_sin_inidicacion : 'Write the mail user. You can enter more than 1 separated by commas '
+_comentarios_: Comments
+_enviar_: Send
+_fecha_: Date
+_foro_ : Discussion foro
+_photo_ : Profile Picture
 
 Boletin: Bulletin
 'Boletin List': 'Bulletin Listing'
