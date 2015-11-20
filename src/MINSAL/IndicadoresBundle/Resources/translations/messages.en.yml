@@ -53,6 +53,7 @@ significado: Meaning
 'User Edit': 'User Edit'
 'usuario_indicadores-eTAB': 'Indicators user'
 'nombre_usuario': User
+'_usuario_': User
 
 'responsable_datos-eTAB': 'Data Manager'
 'Responsable Dato List': 'Data Manager - Listing'
@@ -261,7 +262,7 @@ javascript:
   mapa: 'Map'
   lineas: 'Lines'
   refrescar: 'Reload'
-  guardar_imagen: 'Right click on the image, then choose "Save Image As ..."'
+  guardar_imagen: 'Right click on the image, then choose Save Image As ...'
   _nada_encontrado_ : 'Nothing found - sorry'
   _mostrando_n_de_n_: 'Showing _START_ to _END_ of _TOTAL_ records'
   _mostrando_0_ : 'Showing 0 to 0 of 0 records'
@@ -423,3 +424,13 @@ manual_tablero: 'Dashboard Manual'
 _exportar_datos_: 'Export Data'
 _exportar_datos_opciones_: 'Choose the format to export'
 _exportar_datos_boton_: 'Export'
+_exportar_tabla_datos_: Export data table
+_exportar_grafico_: Export graph
+_reporte_sala_: Room Report
+_reporte_: Report
+_mostrar_reporte_: Show Report
+_buscar_indicador_: Search indicator
+_agregar_accion_: Add Action
+_origen_datos_: Data Source
+_general_: General
+_clasificacion_: Classification

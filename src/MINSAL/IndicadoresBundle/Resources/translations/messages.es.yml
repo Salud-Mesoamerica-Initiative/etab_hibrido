@@ -56,6 +56,7 @@ significado: Significado
 'User Edit': 'Editar usuario'
 'usuario_indicadores-eTAB': 'Usuarios de indicadores'
 'nombre_usuario': Usuario
+'_usuario_': Usuario
 
 'responsable_datos-eTAB': 'Responsable de Datos'
 'Responsable Dato List': 'Responsable de Dato - Listado'
@@ -265,7 +266,7 @@ javascript:
   mapa: 'Mapa'
   lineas: 'Lineas'
   refrescar: 'Recargar'
-  guardar_imagen: 'De clic derecho sobre la imagen, luego elija "Guardar imagen como..."'
+  guardar_imagen: 'De clic derecho sobre la imagen, luego elija Guardar imagen como...'
   _nada_encontrado_ : 'No se encontraron resultados'
   _mostrando_n_de_n_: 'Mostrando desde _START_ hasta _END_ de _TOTAL_ registros'
   _mostrando_0_ : 'Mostrando 0 registros'
@@ -412,3 +413,13 @@ manual_tablero: 'Manual Tablero'
 _exportar_datos_: 'Exportar Datos'
 _exportar_datos_opciones_: 'Elige el formato para exportar'
 _exportar_datos_boton_: 'Exportar'
+_exportar_tabla_datos_: Exportar Tabla de datos
+_exportar_grafico_: Exportar gráfico
+_reporte_sala_: Reporte de sala
+_reporte_: Reporte
+_mostrar_reporte_: Mostrar Reporte
+_buscar_indicador_: Buscar indicador
+_agregar_accion_: Agregar acción
+_origen_datos_: Origen de los datos
+_clasificacion_: Clasificación
+_general_: General

@@ -431,10 +431,10 @@ class IndicadorController extends Controller
 							if($ft!="")
 							{
 								if(stripos($cu,"".$ind->getId()))
-								$indicadores_clasificados[] =array("id"=> $ind->getId(),"nombre"=>$ind->getNombre());
+								$indicadores_clasificados[] =array("id"=> $ind->getId(),"nombre"=>$ind->getNombre(), 'unidadMedida' => $ind->getUnidadMedida());
 							}
 							else						
-							$indicadores_clasificados[] =array("id"=> $ind->getId(),"nombre"=>$ind->getNombre());
+							$indicadores_clasificados[] =array("id"=> $ind->getId(),"nombre"=>$ind->getNombre(), 'unidadMedida' => $ind->getUnidadMedida());
 						}
 					}
 				}							

@@ -13,6 +13,7 @@ use MINSAL\IndicadoresBundle\Entity\GrupoIndicadores;
 use MINSAL\IndicadoresBundle\Entity\User;
 use MINSAL\IndicadoresBundle\Entity\UsuarioGrupoIndicadores;
 use Symfony\Component\HttpFoundation\Session\Session;
+use MINSAL\IndicadoresBundle\Entity\SalaAcciones;
 
 class SocialController extends Controller {
 
@@ -122,7 +123,7 @@ class SocialController extends Controller {
             $dato = array(array
             (
                 'token' =>md5(time()), 
-                'sala' => $sala
+                'sala' => $sala->getId()
             ));
 
             $qb = $em->createQueryBuilder();
@@ -163,7 +164,7 @@ class SocialController extends Controller {
             $dato = array(array
             (
                 'token' =>$token, 
-                'sala' => $sala
+                'sala' => $sala->getId()
             ));
             
             $usuario = explode(",", $req->get("usuarios_sin"));
@@ -299,5 +300,20 @@ class SocialController extends Controller {
                 ));
         }
         
+    }
+
+    /**
+     * @Route("/sala/{id}/accion/borrar", name="accion_borrar", options={"expose"=true})
+    */
+    public function borrarAccion(SalaAcciones $id) {
+        if (!$id) {
+             return new Response("No existe el elemento");
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->remove($id);
+        $em->flush();
+    
+        return new Response("Elemento borrado");
     }
 }

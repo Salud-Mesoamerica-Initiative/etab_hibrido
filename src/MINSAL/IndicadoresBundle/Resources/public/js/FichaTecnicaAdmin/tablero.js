@@ -464,8 +464,8 @@ function cargar_indicador(mid)
 	else
 	{
 		$("#_guardar_sala_").attr("style","display:");
-                $("#_exportar_datos_").attr("style","display:");
-                $("#_exportar_diccionario_datos_").attr("style","display:");
+        $("#_exportar_datos_").attr("style","display:");
+        $("#_exportar_diccionario_datos_").attr("style","display:");
 		$("#_sala_acciones_").attr("style","display:");
 		$("#_compartir_sala_").attr("style","display:");
 		sala_agregar_fila(); 
@@ -475,8 +475,7 @@ function cargar_indicador(mid)
 		
 		$("#fav-"+mid).addClass("active btn-success");
 		$("#fav-"+mid).html('<i class="glyphicon glyphicon-ok"></i>');
-		
-		
+				
 		dibujarIndicador($("#"+mid).attr('data-id'));
 	}
 }
@@ -489,7 +488,7 @@ function mostrarAccionSala(mostrar)
 function cargarMensajes(sala) {
 	if (sala) {
 	    $('#chat-mensajes').load(
-	            Routing.generate('sala_get_comentarios', {idSala: sala}), {vez: 1},
+	        Routing.generate('sala_get_comentarios', {idSala: sala}), {vez: 1},
 	    function(response, status, xhr) {
 	        setScroll();
 	    });
@@ -502,6 +501,17 @@ function setScroll() {
     });
 }    
 
+function borrarAccion(id) {
+	if(confirm('¿Está seguro de que quiere borrar el elemento seleccionado?'))
+	{
+		$.post(Routing.generate('accion_borrar', {id: id}),  function(data) {
+            if (data != '') {
+            	alert(data);
+                $('#accion-'+id).remove();                  
+            }
+        });
+	}
+}
 function cargarAcciones(sala) {
 	if (sala) {
 		var url = Routing.generate('sala_acciones_custom_list', {id: sala,

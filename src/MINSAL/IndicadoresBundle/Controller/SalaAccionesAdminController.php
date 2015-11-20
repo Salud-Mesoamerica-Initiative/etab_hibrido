@@ -22,7 +22,7 @@ class SalaAccionesAdminController extends Controller
         $acciones = $em->getRepository("IndicadoresBundle:SalaAcciones")
                         ->findBy(array('sala'=>$sala, 
                             'usuario'=>$usuario), 
-                                array('fecha'=> 'ASC'));
+                             array('fecha'=> 'ASC'));
         
         $resp = '<br/><br/>
                 <table class="table table-bordered table-striped">
@@ -33,16 +33,18 @@ class SalaAccionesAdminController extends Controller
                             <TH>Acciones</TH>
                             <TH>Observaciones</TH>
                             <TH>Responsables</TH>
+                            <TH></TH>
                         </tr>
                     </thead>
                     <tbody>';                
         foreach ($acciones as $acc){
-            $resp .=  '<TR>'.
+            $resp .=  '<TR id="accion-'.$acc->getId().'">'.
                             '<TD data-sort="'.$acc->getFecha()->format('YmdHms').'">'.$acc->getFecha()->format('d/m/Y H:m:s').'</TD>'.
                             '<TD>'.$acc->getUsuario().'</TD>'.
                             '<TD>'.$acc->getAcciones(). '</TD>'.
                             '<TD>'.$acc->getObservaciones() . '</TD>' . 
-                            '<TD>'.$acc->getResponsables() . '</TD>'.                            
+                            '<TD>'.$acc->getResponsables() . '</TD>'. 
+                            '<TD><a class="btn btn-danger" onclick="borrarAccion('.$acc->getId().')"><i class="glyphicon glyphicon-trash" ></i></a></TD>'.                            
                     '</TR>';
         }
         $resp .= '</tbody>
@@ -52,7 +54,7 @@ class SalaAccionesAdminController extends Controller
     
     /**
      * @Route("/sala/{id}/accion/guardar", name="accion_guardar", options={"expose"=true})
-     */
+    */
     public function guardarAccion(GrupoIndicadores $sala) {
         $em = $this->getDoctrine()->getManager();
         $req = $this->getRequest();        

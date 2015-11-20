@@ -37,7 +37,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="div_carga" class='affix'>
+<div id="div_carga" class='affix' style="z-index:999999999;">
     <img id="cargador" src="{{ asset('bundles/indicadores/images/ajax-loader.gif') }}"/>
 </div>
 <nav class="navbar navbar-default navbar-fixed-top toolbar-tablero" style="margin-top:50px; background:#FFFFFF" role="navigation">
@@ -51,7 +51,12 @@
         <div class="collapse navbar-collapse" id="collapseTwo">
             <a class="btn dropdown-toggle btn-success navbar-btn" href="#myModalMenu" data-toggle="modal" id="mimodal" >
                 <i class="glyphicon glyphicon-flag"></i> <span class="hidden-xs">{{"indicadores"|trans}}</span>
-            </a>                      
+            </a> 
+            <span id="opcion_exportar" style="display:none">
+            <button id='export' class="btn btn-info" title="{{'_exportar_tabla_datos_'|trans}}"><span class="glyphicon glyphicon-list-alt"></span></button>            
+            <button id='ver_ficha' class="btn btn-info" title="{{'ver_ficha_tecnica'|trans}}"><span class="glyphicon glyphicon-briefcase"></span> </button>  
+            <button id='export_grp' class="btn btn-primary" title="{{'_exportar_grafico_'|trans}}"><span class="glyphicon glyphicon-picture"></span> </button> 
+            </span>                    
         </div>
     </div>
 </nav>
@@ -64,7 +69,10 @@
 
 	<div class="content tab-pane active" id="output"></div>
 </div>
-
+<div class="content tab-pane" id="tab1" >            
+    <div id="output" ></div>
+</div>
+<a id="dlink" style="display:none;"></a>
 <!-- Modal Menu-->  
 <div id="myModalMenu" class="modal fade" style="z-index:99999999;">
   <div class="modal-dialog">
@@ -190,6 +198,25 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div id="fichaTecnica" class="modal fade" style="z-index:99999999;" aria-labelledby="fichaTecnicaTitle">
+    <div class="modal-dialog">
+        <div class="modal-content span12">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 id="fichaTecnicaTitle"></h4>
+            </div>
+
+            <div class="modal-body">
+                <span class='info' id='fichaTecnicaContent'></span>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">{{'_cerrar_'|trans}}</button>
+            </div>
+        </div>
+    </div>
+</div>    
 <script>
 $(document).ready(function(){
 								
@@ -340,7 +367,8 @@ function indicadoresList(valor,che,ft)
 			{
 				li=li+'<li class="list-group-item" style="height:100%; min-height:55px; width:100%; display:block;">'+
 				'<a class="indicador pull-left btn btn-default" style="margin-right:15px" data-id="'+datos[c].id+'"'+
-				'id="'+datos[c].id+'" data-name="'+datos[c].nombre+'" data-unidad-medida = "'+datos[c].unidadMedida+'">'+
+				'id="'+datos[c].id+'" data-name="'+datos[c].nombre+'" data-unidad-medida = "'+datos[c].unidadMedida+'"'+
+                'onclick="cargar_indicador('+datos[c].id+',\''+datos[c].nombre+'\')">'+
 				'<i class="glyphicon glyphicon-ok"></i>'+
 				'</a>'+datos[c].nombre+'<div class="clearfix"></div></li>';										
 			}
