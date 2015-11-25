@@ -67,8 +67,8 @@ $(document).ready(function() {
 			$('#header_sala').html('');
 			$("#_cerrar_sala_").attr("style","display:none");
 			$("#_guardar_sala_").attr("style","display:none");
-                        $("#_exportar_datos_").attr("style","display:none");
-                        $("#_exportar_diccionario_datos_").attr("style","display:none");
+                        $("#_exportar_datos_btn").attr("style","display:none");
+                        //$("#_exportar_diccionario_datos_").attr("style","display:none");
 			$("#_sala_acciones_").attr("style","display:none");
 			$("#_compartir_sala_").attr("style","display:none");
 			$("#titulo_header").attr("style","display:none");
@@ -107,8 +107,8 @@ $(document).ready(function() {
 			$('#header_sala').html('');
 			$("#_cerrar_sala_").attr("style","display:none");
 			$("#_guardar_sala_").attr("style","display:none");
-                        $("#_exportar_datos_").attr("style","display:none");
-                        $("#_exportar_diccionario_datos_").attr("style","display:none");
+                        $("#_exportar_datos_btn").attr("style","display:none");
+                        //$("#_exportar_diccionario_datos_").attr("style","display:none");
 			$("#_sala_acciones_").attr("style","display:none");
 			$("#_compartir_sala_").attr("style","display:none");
 			$("#titulo_header").attr("style","display:none");
@@ -120,8 +120,8 @@ $(document).ready(function() {
 			$("#sala").html('');
 			$("#_cerrar_sala_").attr("style","display:");
 			$("#_guardar_sala_").attr("style","display:");
-                        $("#_exportar_datos_").attr("style","display:");
-                        $("#_exportar_diccionario_datos_").attr("style","display:");
+                        $("#_exportar_datos_btn").attr("style","display:");
+                        //$("#_exportar_diccionario_datos_").attr("style","display:");
 			$("#_sala_acciones_").attr("style","display:");
 			$("#_compartir_sala_").attr("style","display:");
 			$("#titulo_header").attr("style","display:");
@@ -464,8 +464,8 @@ function cargar_indicador(mid)
 	else
 	{
 		$("#_guardar_sala_").attr("style","display:");
-        $("#_exportar_datos_").attr("style","display:");
-        $("#_exportar_diccionario_datos_").attr("style","display:");
+                $("#_exportar_datos_btn").attr("style","display:");
+                //$("#_exportar_diccionario_datos_").attr("style","display:");
 		$("#_sala_acciones_").attr("style","display:");
 		$("#_compartir_sala_").attr("style","display:");
 		sala_agregar_fila(); 

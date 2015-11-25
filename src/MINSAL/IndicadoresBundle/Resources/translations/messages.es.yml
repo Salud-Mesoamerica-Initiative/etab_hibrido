@@ -410,7 +410,8 @@ manual_operativo: 'Manual Operativo'
 manual_usuario: 'Manual Usuario'
 manual_tablero: 'Manual Tablero'
 
-_exportar_datos_: 'Exportar Datos'
+_exportar_datos_: 'Datos'
+_exportar_datos_lbl: 'Exportar Datos'
 _exportar_datos_opciones_: 'Elige el formato para exportar'
 _exportar_datos_boton_: 'Exportar'
 _exportar_tabla_datos_: Exportar Tabla de datos
@@ -423,3 +424,5 @@ _agregar_accion_: Agregar acción
 _origen_datos_: Origen de los datos
 _clasificacion_: Clasificación
 _general_: General
+_exportar_diccionario_datos_: 'Diccionario de Datos'
+_exportar_diccionario_datos_lbl: 'Exportar Diccionario de Datos'

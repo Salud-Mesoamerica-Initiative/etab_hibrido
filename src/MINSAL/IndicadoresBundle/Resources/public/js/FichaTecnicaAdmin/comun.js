@@ -864,9 +864,10 @@ function limpiarZona2(id)
 		contador++;
 	});
 	if(contador==0){
-                $("#_exportar_datos_").attr("style","display:none");
-                $("#_exportar_diccionario_datos_").attr("style","display:none");
+                $("#_exportar_datos_btn").attr("style","display:none");
+                //$("#_exportar_diccionario_datos_").attr("style","display:none");
                 $("#_sala_acciones_").attr("style","display:none");
+                $("#_compartir_sala_").attr("style","display:none");
 		$("#_guardar_sala_").attr("style","display:none");
             }
 	
