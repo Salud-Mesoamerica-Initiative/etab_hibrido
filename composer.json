@@ -46,7 +46,6 @@
         "videlalvaro/php-amqplib": "dev-master",
         "oldsound/rabbitmq-bundle": "*",
         "fr3d/ldap-bundle": "2.0.*@dev",
-		"knplabs/knp-snappy-bundle": "dev-master",
         
         "mobiledetect/mobiledetectlib": "~2.8",
         "suncat/mobile-detect-bundle": "~0.10.2",

@@ -107,7 +107,7 @@ $(document).ready(function() {
 			$('#header_sala').html('');
 			$("#_cerrar_sala_").attr("style","display:none");
 			$("#_guardar_sala_").attr("style","display:none");
-                        $("#_exportar_datos_btn").attr("style","display:none");
+            $("#_exportar_datos_btn").attr("style","display:none");
                         //$("#_exportar_diccionario_datos_").attr("style","display:none");
 			$("#_sala_acciones_").attr("style","display:none");
 			$("#_compartir_sala_").attr("style","display:none");
@@ -120,7 +120,7 @@ $(document).ready(function() {
 			$("#sala").html('');
 			$("#_cerrar_sala_").attr("style","display:");
 			$("#_guardar_sala_").attr("style","display:");
-                        $("#_exportar_datos_btn").attr("style","display:");
+            $("#_exportar_datos_btn").attr("style","display:");
                         //$("#_exportar_diccionario_datos_").attr("style","display:");
 			$("#_sala_acciones_").attr("style","display:");
 			$("#_compartir_sala_").attr("style","display:");
@@ -151,7 +151,7 @@ $(document).ready(function() {
 				sala_agregar_fila();
 				recuperarDimensiones(graficos[i].idIndicador, graficos[i]);
 			}						
-		}
+		}		
     });   
     
     $('#agregar_fila').on('click',function(e) {
@@ -563,4 +563,8 @@ if (sala) {
             });
         });        
     }
+}
+function imprimirSala()
+{
+	 window.print();
 }

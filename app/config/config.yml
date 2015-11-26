@@ -63,7 +63,7 @@ doctrine:
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
-        
+
 sonata_block:
     default_contexts: [cms]
     blocks:
@@ -90,14 +90,14 @@ sonata_cache:
             token:  s3cur3   # token used to clear the related cache
             prefix: test     # prefix to ensure there is no clash between instances
             servers:
-                - { domain: kooqit.local, ip: 127.0.0.1, port: 80}                       
+                - { domain: kooqit.local, ip: 127.0.0.1, port: 80}
 
 knp_menu:
     twig:  # use "twig: false" to disable the Twig extension and the TwigRenderer
         template: knp_menu.html.twig
     templating: false # if true, enables the helper for PHP templates
     default_renderer: twig # The renderer to use, list is also available by default                
-    
+
 sonata_admin:
     security:
         handler: sonata.admin.security.handler.role
@@ -114,9 +114,8 @@ sonata_admin:
         edit:    IndicadoresBundle:CRUD:edit.html.twig
         # se personalizó la plantilla de borrar
         delete:  IndicadoresBundle:CRUD:delete.html.twig        
-        list_block: IndicadoresBundle:Block:block_admin_list.html.twig
-                
-        
+        list_block: IndicadoresBundle:Block:block_admin_list.html.twig                
+
 fos_user:
     db_driver:        orm # can be orm or odm
     firewall_name:    main
@@ -147,11 +146,11 @@ sonata_user:
             type:               sonata_user_profile
             handler:            sonata.user.profile.form.handler.default
             name:               sonata_user_profile_form
-            validation_groups:  [Profile]		
-            
+            validation_groups:  [Profile]
+
 sonata_doctrine_orm_admin:
     templates:
-        form: [ IndicadoresBundle:Form:form_admin_fields.html.twig ]   
+        form: [ IndicadoresBundle:Form:form_admin_fields.html.twig ]
         filter: [ SonataDoctrineORMAdminBundle:Form:filter_admin_fields.html.twig ]
 
 old_sound_rabbit_mq:
@@ -180,7 +179,7 @@ old_sound_rabbit_mq:
             exchange_options: {name: 'guardar_registro', type: direct}
             queue_options:    {name: 'guardar_registro'}
             callback:         indicadores.guardar_registro_origen_dato
-            
+
 services:
     my_listener:
         class: MINSAL\IndicadoresBundle\Listener\LocaleListener
@@ -193,13 +192,13 @@ services:
         arguments:  ["@service_container"]
         tags:
             - { name: monolog.processor, handler: vitacora.siig}
-            
+
     vitacora.siig:
         class: Symfony\Bridge\Monolog\Logger
         arguments: [ACTIVIDAD]
         calls:
             - [pushHandler, [@monolog.handler.vitacora.siig]]
-        
+
     monolog.handler.vitacora.siig:
         class: Monolog\Handler\StreamHandler
         arguments: [%archivo_vitacora%, 200] #definido en Parameters.yml
@@ -239,13 +238,3 @@ swiftmailer:
     #disable_delivery:  true
     #schiapassm2015@gmail.com
     #bit@2013 (B mayuscula o minuscula)
-
-knp_snappy:
-    pdf:
-        enabled:    true
-        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-        options:    []
-    image:
-        enabled:    true
-        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-        options:    []
