@@ -383,7 +383,7 @@ esquema de Mondrian es usado por Saiku.
 			$cubo=true;
 			}
 		}
-     	} 
+     	} /*
        if ($cubo){
        $schemaFile=$this->getConfigurationPool()->getContainer()->getParameter('carpeta_siig_mondrian').'/indicador'.$fichaTecnica->getId('id').'.mondrian.xml';
 	$fh=fopen($this->getConfigurationPool()->getContainer()->getParameter('carpeta_siig_mondrian').'/cubo_base.txt','r');
@@ -424,7 +424,7 @@ esquema de Mondrian es usado por Saiku.
 	$fh = fopen($pentahoResource, 'w'); 
 	fwrite($fh, $this->formatXML($xml->asXML())); 
         fclose($fh);
-	}
+	}*/
 	$em->flush(); 
     }
 
