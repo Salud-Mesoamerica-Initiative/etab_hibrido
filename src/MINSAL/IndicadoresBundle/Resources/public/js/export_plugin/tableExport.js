@@ -58,7 +58,7 @@
                             if (indicador == ""){
                                 xml += '<indicador_item nombre="'+nombre+'">';
                             }else{
-                                    xml += '</indicador><indicador nombre="'+nombre+'">';
+                                    xml += '</indicador_item><indicador_item nombre="'+nombre+'">';
                             }
                             indicador = nombre;
                             

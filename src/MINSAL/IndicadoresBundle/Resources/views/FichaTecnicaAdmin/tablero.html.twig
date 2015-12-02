@@ -350,8 +350,25 @@ $(document).ready(function(){
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">{{'_exportar_diccionario_datos_lbl'|trans}}</h3>
         </div>
-    
         <div class="modal-body row">
+            
+                <div class="col-lg-12">
+                <ul class="list-group" >
+                    <li class='list-group-item'>
+                        <div class="material-switch">
+                            <input id="exportar_datos_xls" value="xls" name="exportar_datos_opciones_radio" type="radio"/>
+                            <label for="exportar_datos_xls" class="label-primary">XLS</label>
+                        </div>
+                    </li>
+                    <li class='list-group-item'>
+                        <div class="material-switch">
+                            <input id="exportar_datos_pdf" value="pdf" name="exportar_datos_opciones_radio" type="radio" checked/>
+                            <label for="exportar_datos_pdf" class="label-primary">PDF</label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
             <div id="contenedor_indicadores_diccionario">
                 
             </div>
@@ -512,33 +529,52 @@ $(document).ready(function(){
             
             var elementos = [];
             var maxcollength = 0;
+            
             $('#contenedor_tablero').find('.area_grafico').each(function(i,elemento){
-                
+
                 var zona = $(elemento).attr('id');
                 var datasetPrincipal = JSON.parse($('#' + zona).attr('datasetPrincipal'));
                 var nombre = $('#' + zona + ' .titulo_indicador').attr('nombre');
-                
+
                 var item = new Object();
                 item.nombre = nombre;
                 item.datos = datasetPrincipal;
                 item.zona = zona;
-                
+
                 elementos[elementos.length] = item;
                 var tamanio = objSize(datasetPrincipal[0]);
                 maxcollength = (maxcollength < tamanio) ? tamanio : maxcollength;
             });
             
-            var tabla = '<table><tbody>';
-            for (i = 0; i < elementos.length; i++) {
-                tabla += construir_tabla(elementos[i], maxcollength);
-            }
-            tabla += '</tbody></table>';            
+            if (opcion !== 'xls'){ 
+                var tabla = '<table><tbody>';
+                for (i = 0; i < elementos.length; i++) {
+                    tabla += construir_tabla(elementos[i], maxcollength);
+                }
+                tabla += '</tbody></table>'; 
+
+            }else{
+                var tabla = [];
+                var nombres = [];
+                for (i = 0; i < elementos.length; i++) {
+                    var tabla_item = '<table><tbody>';
+                    tabla_item += construir_tabla(elementos[i], maxcollength);
+                    tabla_item += '</tbody></table>';
+                    
+                    tabla[tabla.length] = tabla_item;
+                    nombres[nombres.length] = 'Indicador '+(i+1);
+                }
+                
+            }          
                                     
             switch(opcion){
                 case 'xls':
-                    var excelData = $(tabla).tableExport({type:'excel',escape:'false'});
-                    var blob = new Blob([excelData], {type: "text/comma-separated-values;charset=utf-8"});
-                    saveAs(blob, "reporte.xls")
+                    
+                    tablesToExcel(tabla, nombres, 'reporte.xls', 'Excel');
+                    
+                    //var excelData = $(tabla).tableExport({type:'excel',escape:'false'});
+                    //var blob = new Blob([excelData], {type: "text/comma-separated-values;charset=utf-8"});
+                    //saveAs(blob, "reporte.xls")
                     break;
                 case 'csv':
                     var tdData = $(tabla).tableExport({type:'csv',escape:'false',separator: ','});                    
@@ -572,9 +608,76 @@ $(document).ready(function(){
         
         });
         
+        var tablesToExcel = (function() {
+            var uri = 'data:application/vnd.ms-excel;base64,'
+            , tmplWorkbookXML = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
+              + '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"><Author>Axel Richter</Author><Created>{created}</Created></DocumentProperties>'
+              + '<Styles>'
+              + '<Style ss:ID="Currency"><NumberFormat ss:Format="Currency"></NumberFormat></Style>'
+              + '<Style ss:ID="Date"><NumberFormat ss:Format="Medium Date"></NumberFormat></Style>'
+              + '</Styles>' 
+              + '{worksheets}</Workbook>'
+            , tmplWorksheetXML = '<Worksheet ss:Name="{nameWS}"><Table>{rows}</Table></Worksheet>'
+            , tmplCellXML = '<Cell{attributeStyleID}{attributeFormula}><Data ss:Type="{nameType}">{data}</Data></Cell>'
+            , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+            return function(tables, wsnames, wbname, appname) {
+              var ctx = "";
+              var workbookXML = "";
+              var worksheetsXML = "";
+              var rowsXML = "";
+
+              for (var i = 0; i < tables.length; i++) {
+                if (!tables[i].nodeType) {
+                    tables[i] = $(tables[i])[0];
+                }
+                for (var j = 0; j < tables[i].rows.length; j++) {
+                  rowsXML += '<Row>'
+                  for (var k = 0; k < tables[i].rows[j].cells.length; k++) {
+                    var dataType = tables[i].rows[j].cells[k].getAttribute("data-type");
+                    var dataStyle = tables[i].rows[j].cells[k].getAttribute("data-style");
+                    var dataValue = tables[i].rows[j].cells[k].getAttribute("data-value");
+                    dataValue = (dataValue)?dataValue:$(tables[i].rows[j].cells[k]).text();
+                    if($.isNumeric(dataValue)){
+                        dataType = 'Number';
+                    }
+                    var dataFormula = tables[i].rows[j].cells[k].getAttribute("data-formula");
+                    dataFormula = (dataFormula)?dataFormula:(appname=='Calc' && dataType=='DateTime')?dataValue:null;
+                    ctx = {  attributeStyleID: (dataStyle=='Currency' || dataStyle=='Date')?' ss:StyleID="'+dataStyle+'"':''
+                           , nameType: (dataType=='Number' || dataType=='DateTime' || dataType=='Boolean' || dataType=='Error')?dataType:'String'
+                           , data: (dataFormula)?'':dataValue
+                           , attributeFormula: (dataFormula)?' ss:Formula="'+dataFormula+'"':''
+                          };
+                    rowsXML += format(tmplCellXML, ctx);
+                  }
+                  rowsXML += '</Row>'
+                }
+                ctx = {rows: rowsXML, nameWS: wsnames[i] || 'Sheet' + i};
+                worksheetsXML += format(tmplWorksheetXML, ctx);
+                rowsXML = "";
+              }
+
+              ctx = {created: (new Date()).getTime(), worksheets: worksheetsXML};
+              workbookXML = format(tmplWorkbookXML, ctx);
+
+                //console.log(workbookXML);
+
+              var link = document.createElement("A");
+              link.href = uri + base64(workbookXML);
+              link.download = wbname || 'Workbook.xls';
+              link.target = '_blank';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }
+          })();
+        
         $('#exportar_diccionario_boton').click(function(){
                     
             var elementos = [];
+            
+            var opcion = $('input[name=exportar_datos_opciones_radio]:checked').val();
+            
             $('#contenedor_indicadores_diccionario').find('.grafico_exportar').each(function(i,elemento){
                 
                 if(elemento.checked){
@@ -590,64 +693,94 @@ $(document).ready(function(){
                     elementos[elementos.length] = item;   
                 }            
         });
-            
-        var dd = {
-            content: [
-                { text: 'Diccionario de datos', style: 'subheader' }
-            ],
-            styles: {
-                    header: {
-                            fontSize: 18,
-                            bold: true,
-                            margin: [0, 0, 0, 10]
-                    },
-                    subheader: {
-                            fontSize: 16,
-                            bold: true,
-                            margin: [0, 10, 0, 5]
-                    },
-                    tableExample: {
-                            margin: [0, 5, 0, 15]
-                    },
-                    tableHeader: {
-                            bold: true,
-                            fontSize: 13,
-                            color: 'black'
-                    }
+        if (opcion == 'pdf'){
+            var dd = {
+                content: [
+                    { text: 'Diccionario de datos', style: 'subheader' }
+                ],
+                styles: {
+                        header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                        },
+                        subheader: {
+                                fontSize: 16,
+                                bold: true,
+                                margin: [0, 10, 0, 5]
+                        },
+                        tableExample: {
+                                margin: [0, 5, 0, 15]
+                        },
+                        tableHeader: {
+                                bold: true,
+                                fontSize: 13,
+                                color: 'black'
+                        }
+                }
             }
-        }
+
+            var revisarfin = setInterval(function(){
+
+                for(var i=0;i<elementos.length;i++){
+                    if (elementos[i].datos == null){
+                        return false;
+                    }
+                }
+                    pdfMake.createPdf(dd).download('diccionario_indicadores.pdf');
+                    cerrarintervalo();        
+                }, 500);
+
+                function cerrarintervalo(){
+                    clearInterval(revisarfin); 
+                }
+
+            $(elementos).each(function(i,elemento){
+                zona=$(this).attr("data-id");
+                $.get(Routing.generate('get_indicador_ficha',{id: elemento.id}),
+                    function(resp) {
+                        var contenido = $(resp);
+                        var tabla = $('table', contenido);
+                        elemento.datos = tabla;
+                        dd.content.push(construir_arreglo(elemento));
+                }); 
+            });
         
-        var revisarfin = setInterval(function(){
+        } else if (opcion == 'xls'){
+            var tablas = [];
+            var nombres = [];
             
+            var revisarfin = setInterval(function(){
+
             for(var i=0;i<elementos.length;i++){
                 if (elementos[i].datos == null){
                     return false;
                 }
             }
-                pdfMake.createPdf(dd).download('diccionario_indicadores.pdf');
+                //pdfMake.createPdf(dd).download('diccionario_indicadores.pdf');
+                tablesToExcel(tablas, nombres, 'reporte.xls', 'Excel');
                 cerrarintervalo();        
             }, 500);
-            
+
             function cerrarintervalo(){
                 clearInterval(revisarfin); 
             }
-
-        $(elementos).each(function(i,elemento){
-            zona=$(this).attr("data-id");
-            $.get(Routing.generate('get_indicador_ficha',{id: elemento.id}),
-                function(resp) {
-                    var contenido = $(resp);
-                    var tabla = $('table', contenido);
-                    elemento.datos = tabla;
-                    dd.content.push(construir_arreglo(elemento));
-            }); 
-        });
-                
-                        
+            
+            $(elementos).each(function(i,elemento){
+                zona=$(this).attr("data-id");
+                $.get(Routing.generate('get_indicador_ficha',{id: elemento.id}),
+                    function(resp) {
+                        var contenido = $(resp);
+                        var tabla = $('table', contenido);
+                        elemento.datos = tabla;
+                        tablas[tablas.length] = tabla;
+                        nombres[nombres.length] = 'indicador '+(i+1);
+                }); 
+            });
+        }             
         });
         
-        function construir_arreglo(elemento) 
-        {
+        function construir_arreglo(elemento) {
             var datos = elemento.datos;
             var nombre = elemento.nombre;
             
@@ -696,11 +829,9 @@ $(document).ready(function(){
             objeto.push(contenido);
             
             return objeto;
-        }
-        
+        }   
 
-        function construir_tabla(elemento, tamanio) 
-        {
+        function construir_tabla(elemento, tamanio) {
             var zona = elemento.zona;
             var datos = elemento.datos;
             var nombre = elemento.nombre;
