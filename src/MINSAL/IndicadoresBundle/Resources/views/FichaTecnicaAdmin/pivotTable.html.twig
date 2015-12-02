@@ -12,7 +12,10 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="{{ asset('bundles/indicadores/js/FichaTecnicaAdmin/pivotTable.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/indicadores/js/pivotTable/pivot.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/pivotTable/pivot.es.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/indicadores/js/pivotTable/gcharts_renderers.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/rasterizeHTML.allinone.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/indicadores/js/jquery.searchFilter.js') }}" type="text/javascript"></script>
 	
 <style>
 .ui-autocomplete { max-height: 200px; overflow:visible; z-index:999999999}
@@ -198,6 +201,25 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div id="myModal2" class="modal fade" style="z-index:99999999;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel2"></h3>
+            </div>
+
+            <div class="modal-body">
+                <span class='info' id='sql'></span>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">{{'_cerrar_'|trans}}</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="fichaTecnica" class="modal fade" style="z-index:99999999;" aria-labelledby="fichaTecnicaTitle">
     <div class="modal-dialog">

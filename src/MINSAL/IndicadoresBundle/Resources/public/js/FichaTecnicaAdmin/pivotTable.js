@@ -20,7 +20,8 @@ $(document).ready(function() {
         tableToExcel(t[0],'indicador', $('#titulo_header').attr('data-content').trim()+'.xls');
     });
     $('#export_grp').on('click',function(e) {      
-        alert(trans.guardar_imagen);
+        $('#myModalLabel2').html(trans.guardar_imagen);
+        $('#myModal2').modal('show');
     });
     
     $('#ver_ficha').on('click',function(e) {
@@ -36,19 +37,19 @@ $(document).ready(function() {
         }
     });
     
+    $("#FiltroNoClasificados").searchFilter({targetSelector: ".indicador", charCount: 2});
     
-    $('.indicador').on('click',function(e) {
+    $('A.indicador').click(function() {
         var id_indicador = $(this).attr('data-id');
         var nombre_indicador = $(this).attr('data-name');
         cargar_indicador(id_indicador,nombre_indicador);
     });
 });
 function cargar_indicador(id_indicador,nombre_indicador){
-    var renderers = $.extend($.pivotUtilities.renderers,
-    $.pivotUtilities.gchart_renderers);
+    var renderers = $.extend($.pivotUtilities.renderers,$.pivotUtilities.gchart_renderers);
                     
     $.getJSON(Routing.generate('get_datos_indicador', {id: id_indicador}), function(mps) {
-        $("#opcion_exportar").attr("style","display:");console.log(id_indicador);
+        $("#opcion_exportar").attr("style","display:");
         $("#output").pivotUI(mps, {
             renderers: renderers,
             menuLimit: 500,
